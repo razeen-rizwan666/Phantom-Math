@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Phantom Math</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      h1 {
+        color: #ff4757;
+        font-size: 36px;
+      }
+      textarea {
+        width: 80%;
+        height: 50px;
+        background: #1e1e1e;
+        border: 1px solid #ff4757;
+        color: #ffffff;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 8px;
+      }
+      button {
+        margin-top: 20px;
+        background: #ff4757;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #ff6b81;
+      }
+      .result-box {
+        margin-top: 20px;
+        background: #1e1e1e;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: left;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #ff4757;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Phantom Math</h1>
+    <textarea id="equation" placeholder="Enter equation (e.g., 2x+2=4 or x^2+5x+6=0)"></textarea><br>
+    <button onclick="solveEquation()">Solve</button>
+    <div id="result" class="result-box"></div>
+
+    <script>
+      function solveEquation() {
+        const input = document.getElementById("equation").value.trim();
+        const resultDiv = document.getElementById("result");
+        if (!input) {
+          resultDiv.innerHTML = "<b>Please enter an equation.</b>";
+          return;
+        }
+
+        try {
+          let steps = input.includes("=")
+            ? solveWithEquals(input)
+            : simplifyExpression(input);
+          resultDiv.innerHTML = steps;
+        } catch (err) {
+          resultDiv.innerHTML = "<b>Error: Invalid input</b>";
+        }
+      }
+
+      // 🔹 Simplify expressions like "1x+2x"
+      function simplifyExpression(expr) {
+        expr = expr.replace(/\s+/g, "");
+        const terms = expr.match(/[+-]?\d*x?/g).filter(Boolean);
+        let xCoeff = 0, constant = 0;
+
+        for (let term of terms) {
+          if (term.includes("x")) {
+            let coeff = term.replace("x", "");
+            if (coeff === "" || coeff === "+") coeff = 1;
+            if (coeff === "-") coeff = -1;
+            xCoeff += parseFloat(coeff);
+          } else {
+            constant += parseFloat(term);
+          }
+        }
+
+        let simplified = "";
+        if (xCoeff !== 0) simplified += `${xCoeff}x`;
+        if (constant > 0) simplified += `+${constant}`;
+        else if (constant < 0) simplified += `${constant}`;
+        if (!simplified) simplified = "0";
+
+        return `<b>Simplified:</b> ${expr}<br><b>Result:</b> ${simplified}`;
+      }
+
+      // 🔹 Solve equations like "2x+2=4" or "x^2+5x+6=0"
+      function solveWithEquals(eq) {
+        const [lhs, rhs] = eq.split("=").map(s => s.replace(/\s+/g, ""));
+        const left = parseEquationSide(lhs);
+        const right = parseEquationSide(rhs);
+
+        // Move everything to left side
+        const a = left.a - right.a;
+        const b = left.b - right.b;
+        const c = left.c - right.c;
+
+        if (a === 0 && b === 0) {
+          return c === 0
+            ? `<b>${eq}</b><br>Infinite solutions`
+            : `<b>${eq}</b><br>No solution`;
+        }
+
+        if (a === 0) {
+          // Linear equation
+          const x = -c / b;
+          return `<b>Linear Equation:</b> ${eq}<br>Solution: x = ${x}`;
+        }
+
+        // Quadratic
+        const d = b * b - 4 * a * c;
+        let steps = `<b>Quadratic Equation:</b> ${eq}<br>`;
+        steps += `a=${a}, b=${b}, c=${c}<br>Discriminant = ${d}<br>`;
+
+        if (d < 0) {
+          return steps + "No real solutions";
+        }
+
+        const x1 = (-b + Math.sqrt(d)) / (2 * a);
+        const x2 = (-b - Math.sqrt(d)) / (2 * a);
+        return steps + `x₁=${x1}, x₂=${x2}`;
+      }
+
+      // 🔹 Parse one side of equation into a,b,c
+      function parseEquationSide(side) {
+        const terms = side.match(/[+-]?\d*x?\^?2?/g).filter(Boolean);
+        let a = 0, b = 0, c = 0;
+
+        for (let term of terms) {
+          if (term.includes("x^2")) {
+            let coeff = term.replace("x^2", "");
+            if (coeff === "" || coeff === "+") coeff = 1;
+            if (coeff === "-") coeff = -1;
+            a += parseFloat(coeff);
+          } else if (term.includes("x")) {
+            let coeff = term.replace("x", "");
+            if (coeff === "" || coeff === "+") coeff = 1;
+            if (coeff === "-") coeff = -1;
+            b += parseFloat(coeff);
+          } else {
+            c += parseFloat(term);
+          }
+        }
+        return { a, b, c };
+      }
+    </script>
+  </body>
+</html>
