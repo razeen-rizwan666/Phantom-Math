@@ -1,101 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phantom Math</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #121212;
-      color: #fff;
+      color: white;
       display: flex;
     }
-
-    /* Sidebar */
     .sidebar {
-      width: 250px;
+      width: 220px;
       background: #1e1e1e;
       padding: 20px;
       height: 100vh;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
-      position: fixed;
-      left: 0;
-      top: 0;
-      overflow-y: auto;
+      border-right: 2px solid #ff4757;
     }
-
     .sidebar h2 {
       color: #ff4757;
-      margin-top: 0;
+      margin-bottom: 20px;
     }
-
-    .search-box input {
+    .sidebar input {
       width: 100%;
-      padding: 10px;
-      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 5px;
       border: 1px solid #ff4757;
       background: #121212;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .menu {
-      margin-top: 20px;
-    }
-
-    .menu button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      background: #ff4757;
-      border: none;
-      border-radius: 6px;
       color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
     }
-
-    .menu button:hover {
-      background: #ff6b81;
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 5px;
+      transition: 0.3s;
     }
-
-    /* Main content */
+    .sidebar a:hover {
+      background: #ff4757;
+    }
     .content {
-      margin-left: 270px;
-      padding: 40px;
       flex: 1;
+      padding: 40px;
+      text-align: center;
     }
-
-    .content h1 {
-      font-size: 36px;
+    h1 {
       color: #ff4757;
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="sidebar">
     <h2>Phantom Math</h2>
-    <div class="search-box">
-      <input type="text" placeholder="Search equations...">
-    </div>
-    <div class="menu">
-      <button>Linear Equations</button>
-      <button>Quadratic Equations</button>
-      <button>Polynomial Equations</button>
-      <button>Simultaneous Equations</button>
-      <button>Trigonometric Equations</button>
-    </div>
+    <input type="text" placeholder="Search..." />
+    <a href="linear.html">Linear Equations</a>
+    <a href="quadratic.html">Quadratic Equations</a>
+    <a href="simplify.html">Expression Simplifier</a>
+    <a href="system.html">System of Equations</a>
   </div>
-
-  <!-- Main Content -->
   <div class="content">
     <h1>Welcome to Phantom Math</h1>
-    <p>Select an equation type from the left panel to get started.</p>
+    <p>Select a calculator from the sidebar to begin.</p>
   </div>
 </body>
 </html>
