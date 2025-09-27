@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Expression Simplifier</title>
+  <style>
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #1e1e1e;
+      color: white;
+    }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Expression Simplifier</h1>
+  <p>Enter expression like <b>2x+3x+5</b></p>
+  <input id="expr" placeholder="2x+3x+5" />
+  <button onclick="simplify()">Simplify</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    function simplify() {
+      let expr = document.getElementById("expr").value.replace(/\s+/g,"");
+      const terms = expr.match(/[+-]?\d*x?/g).filter(Boolean);
+      let xCoeff = 0, constant = 0;
+      terms.forEach(term => {
+        if (term.includes("x")) {
+          let coeff = term.replace("x","");
+          if (coeff===""||coeff==="+") coeff=1;
+          if (coeff==="-") coeff=-1;
+          xCoeff += parseFloat(coeff);
+        } else {
+          constant += parseFloat(term);
+        }
+      });
+      let result = "";
+      if (xCoeff!==0) result += xCoeff+"x";
+      if (constant>0) result += "+"+constant;
+      else if (constant<0) result += constant;
+      if (result==="") result="0";
+      document.getElementById("result").innerHTML = result;
+    }
+  </script>
+</body>
+</html>
