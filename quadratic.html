@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quadratic Solver</title>
+  <style>
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #1e1e1e;
+      color: white;
+    }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Quadratic Equation Solver</h1>
+  <p>Enter equation like <b>x^2+5x+6=0</b></p>
+  <input id="quadEq" placeholder="x^2+5x+6=0" />
+  <button onclick="solveQuadratic()">Solve</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    function solveQuadratic() {
+      const eq = document.getElementById("quadEq").value.replace(/\s+/g, "");
+      const [lhs, rhs] = eq.split("=");
+      if (rhs !== "0") {
+        document.getElementById("result").innerHTML = "Equation must be = 0";
+        return;
+      }
+      let a=0,b=0,c=0;
+      const terms = lhs.match(/[+-]?\d*x?\^?2?/g).filter(Boolean);
+      terms.forEach(term => {
+        if (term.includes("x^2")) {
+          let coeff = term.replace("x^2","");
+          a += coeff===""||coeff==="+"?1:coeff==="-"?-1:parseFloat(coeff);
+        } else if (term.includes("x")) {
+          let coeff = term.replace("x","");
+          b += coeff===""||coeff==="+"?1:coeff==="-"?-1:parseFloat(coeff);
+        } else {
+          c += parseFloat(term);
+        }
+      });
+      let d = b*b - 4*a*c;
+      if (d < 0) {
+        document.getElementById("result").innerHTML = "No real solutions";
+      } else {
+        let x1 = (-b + Math.sqrt(d)) / (2*a);
+        let x2 = (-b - Math.sqrt(d)) / (2*a);
+        document.getElementById("result").innerHTML = `x₁=${x1}, x₂=${x2}`;
+      }
+    }
+  </script>
+</body>
+</html>
