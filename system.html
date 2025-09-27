@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>System of Equations Solver</title>
+  <style>
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #1e1e1e;
+      color: white;
+    }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>System of 2 Equations Solver</h1>
+  <p>Enter equations like <b>2x+3y=8</b> and <b>x-y=2</b></p>
+  <input id="eq1" placeholder="2x+3y=8" /><br>
+  <input id="eq2" placeholder="x-y=2" /><br>
+  <button onclick="solveSystem()">Solve</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    function solveSystem() {
+      let eq1 = document.getElementById("eq1").value.replace(/\s+/g,"");
+      let eq2 = document.getElementById("eq2").value.replace(/\s+/g,"");
+      function parse(eq) {
+        let [lhs,rhs] = eq.split("=");
+        rhs = parseFloat(rhs);
+        let xMatch = lhs.match(/([+-]?\d*)x/);
+        let yMatch = lhs.match(/([+-]?\d*)y/);
+        let a = xMatch ? (xMatch[1]===""||xMatch[1]==="+"?1:xMatch[1]==="-"?-1:parseFloat(xMatch[1])) : 0;
+        let b = yMatch ? (yMatch[1]===""||yMatch[1]==="+"?1:yMatch[1]==="-"?-1:parseFloat(yMatch[1])) : 0;
+        return {a,b,c:rhs};
+      }
+      let e1=parse(eq1), e2=parse(eq2);
+      let det = e1.a*e2.b - e2.a*e1.b;
+      if(det===0){ document.getElementById("result").innerHTML="No unique solution"; return; }
+      let x = (e1.c*e2.b - e2.c*e1.b)/det;
+      let y = (e1.a*e2.c - e2.a*e1.c)/det;
+      document.getElementById("result").innerHTML=`x=${x}, y=${y}`;
+    }
+  </script>
+</body>
+</html>
