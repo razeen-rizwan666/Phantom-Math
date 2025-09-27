@@ -1,279 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phantom Math</title>
+  <title>Linear Equation Solver</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #fff;
-      display: flex;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background: #1e1e1e;
-      padding: 20px;
-      height: 100vh;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
-      position: fixed;
-      left: 0;
-      top: 0;
-      overflow-y: auto;
-    }
-
-    .sidebar h2 {
-      color: #ff4757;
-      margin-top: 0;
-    }
-
-    .search-box input {
-      width: 100%;
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
+    input, button {
+      margin: 10px;
       padding: 10px;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid #ff4757;
-      background: #121212;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .menu {
-      margin-top: 20px;
-    }
-
-    .menu button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      background: #ff4757;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .menu button:hover {
-      background: #ff6b81;
-    }
-
-    /* Main content */
-    .content {
-      margin-left: 270px;
-      padding: 40px;
-      flex: 1;
-    }
-
-    .content h1 {
-      font-size: 36px;
-      color: #ff4757;
-    }
-
-    .calculator {
-      margin-top: 20px;
       background: #1e1e1e;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #ff4757;
-    }
-
-    input {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 6px;
-      border: 1px solid #ff4757;
-      background: #121212;
-      color: #fff;
-    }
-
-    .calc-btn {
-      margin-top: 10px;
-      padding: 10px 15px;
-      border: none;
-      background: #ff4757;
       color: white;
-      border-radius: 6px;
-      cursor: pointer;
     }
-
-    .calc-btn:hover {
-      background: #ff6b81;
-    }
-
-    .result {
-      margin-top: 10px;
-      font-weight: bold;
-      color: #00ff99;
-    }
+    button { cursor: pointer; }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>Phantom Math</h2>
-    <div class="search-box">
-      <input type="text" placeholder="Search equations...">
-    </div>
-    <div class="menu">
-      <button onclick="showCalculator('linear')">Linear Equations</button>
-      <button onclick="showCalculator('quadratic')">Quadratic Equations</button>
-      <button onclick="showCalculator('polynomial')">Polynomial</button>
-      <button onclick="showCalculator('simultaneous')">Simultaneous Equations</button>
-      <button onclick="showCalculator('trig')">Trigonometric</button>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="content">
-    <h1>Welcome to Phantom Math</h1>
-    <p>Select an equation type from the left panel to get started.</p>
-
-    <!-- Calculators -->
-    <div id="linear" class="calculator" style="display:none;">
-      <h2>Linear Equation: ax + b = c</h2>
-      a: <input id="lin-a" type="number"> 
-      b: <input id="lin-b" type="number"> 
-      c: <input id="lin-c" type="number"> 
-      <button class="calc-btn" onclick="solveLinear()">Solve</button>
-      <div id="lin-result" class="result"></div>
-    </div>
-
-    <div id="quadratic" class="calculator" style="display:none;">
-      <h2>Quadratic Equation: ax² + bx + c = 0</h2>
-      a: <input id="quad-a" type="number"> 
-      b: <input id="quad-b" type="number"> 
-      c: <input id="quad-c" type="number"> 
-      <button class="calc-btn" onclick="solveQuadratic()">Solve</button>
-      <div id="quad-result" class="result"></div>
-    </div>
-
-    <div id="polynomial" class="calculator" style="display:none;">
-      <h2>Polynomial Evaluation</h2>
-      Enter polynomial (e.g. 2x^2+3x+1): <input id="poly-eq" type="text"><br>
-      Enter x value: <input id="poly-x" type="number"> 
-      <button class="calc-btn" onclick="solvePolynomial()">Evaluate</button>
-      <div id="poly-result" class="result"></div>
-    </div>
-
-    <div id="simultaneous" class="calculator" style="display:none;">
-      <h2>Simultaneous Equations</h2>
-      Eq1 (ax + by = c): 
-      a1: <input id="a1" type="number"> 
-      b1: <input id="b1" type="number"> 
-      c1: <input id="c1" type="number"><br>
-      Eq2 (dx + ey = f): 
-      a2: <input id="a2" type="number"> 
-      b2: <input id="b2" type="number"> 
-      c2: <input id="c2" type="number"><br>
-      <button class="calc-btn" onclick="solveSimultaneous()">Solve</button>
-      <div id="sim-result" class="result"></div>
-    </div>
-
-    <div id="trig" class="calculator" style="display:none;">
-      <h2>Trigonometric Calculator</h2>
-      Expression (e.g. sin(30), cos(60), tan(45)): 
-      <input id="trig-exp" type="text">
-      <button class="calc-btn" onclick="solveTrig()">Calculate</button>
-      <div id="trig-result" class="result"></div>
-    </div>
-  </div>
+  <h1>Linear Equation Solver</h1>
+  <p>Enter equation like <b>2x+4=10</b></p>
+  <input id="linearEq" placeholder="2x+4=10" />
+  <button onclick="solveLinear()">Solve</button>
+  <div id="result" class="result"></div>
 
   <script>
-    // Show only the selected calculator
-    function showCalculator(id) {
-      document.querySelectorAll('.calculator').forEach(calc => calc.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
-    }
-
     function solveLinear() {
-      let a = parseFloat(document.getElementById("lin-a").value);
-      let b = parseFloat(document.getElementById("lin-b").value);
-      let c = parseFloat(document.getElementById("lin-c").value);
-      if (a === 0) {
-        document.getElementById("lin-result").innerText = "Not a valid linear equation.";
+      const eq = document.getElementById("linearEq").value;
+      const parts = eq.split("=");
+      if (parts.length !== 2) {
+        document.getElementById("result").innerHTML = "Invalid equation!";
         return;
       }
-      let x = (c - b) / a;
-      document.getElementById("lin-result").innerText = "x = " + x;
-    }
+      let lhs = parts[0].replace(/\s+/g, "");
+      let rhs = parseFloat(parts[1]);
+      let match = lhs.match(/([+-]?\d*)x([+-]\d+)?/);
 
-    function solveQuadratic() {
-      let a = parseFloat(document.getElementById("quad-a").value);
-      let b = parseFloat(document.getElementById("quad-b").value);
-      let c = parseFloat(document.getElementById("quad-c").value);
-      let d = b*b - 4*a*c;
-      if (a === 0) {
-        document.getElementById("quad-result").innerText = "Not a quadratic equation.";
+      if (!match) {
+        document.getElementById("result").innerHTML = "Invalid linear format!";
         return;
       }
-      if (d < 0) {
-        document.getElementById("quad-result").innerText = "No real solutions.";
-        return;
-      }
-      let x1 = (-b + Math.sqrt(d)) / (2*a);
-      let x2 = (-b - Math.sqrt(d)) / (2*a);
-      document.getElementById("quad-result").innerText = "x₁ = " + x1 + ", x₂ = " + x2;
-    }
 
-    function solvePolynomial() {
-      let expr = document.getElementById("poly-eq").value;
-      let x = parseFloat(document.getElementById("poly-x").value);
-      try {
-        let jsExpr = expr.replace(/(\d+)x\^2/g, "($1*Math.pow(x,2))")
-                        .replace(/(\d+)x/g, "($1*x)")
-                        .replace(/x\^2/g, "(Math.pow(x,2))")
-                        .replace(/x/g, "(x)");
-        let result = eval(jsExpr);
-        document.getElementById("poly-result").innerText = "Result = " + result;
-      } catch {
-        document.getElementById("poly-result").innerText = "Invalid polynomial.";
-      }
-    }
+      let a = match[1] === "" || match[1] === "+" ? 1 : (match[1] === "-" ? -1 : parseFloat(match[1]));
+      let b = match[2] ? parseFloat(match[2]) : 0;
 
-    function solveSimultaneous() {
-      let a1 = parseFloat(document.getElementById("a1").value);
-      let b1 = parseFloat(document.getElementById("b1").value);
-      let c1 = parseFloat(document.getElementById("c1").value);
-      let a2 = parseFloat(document.getElementById("a2").value);
-      let b2 = parseFloat(document.getElementById("b2").value);
-      let c2 = parseFloat(document.getElementById("c2").value);
-
-      let det = a1*b2 - a2*b1;
-      if (det === 0) {
-        document.getElementById("sim-result").innerText = "No unique solution.";
-        return;
-      }
-      let x = (c1*b2 - c2*b1) / det;
-      let y = (a1*c2 - a2*c1) / det;
-      document.getElementById("sim-result").innerText = "x = " + x + ", y = " + y;
-    }
-
-    function solveTrig() {
-      let exp = document.getElementById("trig-exp").value.toLowerCase();
-      try {
-        let result;
-        if (exp.startsWith("sin")) {
-          let angle = parseFloat(exp.match(/\d+/)[0]);
-          result = Math.sin(angle * Math.PI / 180);
-        } else if (exp.startsWith("cos")) {
-          let angle = parseFloat(exp.match(/\d+/)[0]);
-          result = Math.cos(angle * Math.PI / 180);
-        } else if (exp.startsWith("tan")) {
-          let angle = parseFloat(exp.match(/\d+/)[0]);
-          result = Math.tan(angle * Math.PI / 180);
-        } else {
-          result = "Unsupported function.";
-        }
-        document.getElementById("trig-result").innerText = "Result = " + result;
-      } catch {
-        document.getElementById("trig-result").innerText = "Invalid expression.";
-      }
+      let x = (rhs - b) / a;
+      document.getElementById("result").innerHTML = "x = " + x;
     }
   </script>
 </body>
