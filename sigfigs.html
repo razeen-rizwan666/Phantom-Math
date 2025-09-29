@@ -3,15 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <title>Significant Figures Counter</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: white;
+      display: flex;
+    }
+    .sidebar {
+      width: 220px;
+      background: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      border-right: 2px solid #ff4757;
+    }
+    .sidebar h2 {
+      color: #ff4757;
+      margin-bottom: 20px;
+    }
+    .sidebar input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #121212;
+      color: white;
+    }
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      background: #ff4757;
+    }
+    .content {
+      flex: 1;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #ff4757;
+    }
+    input, button {
+      padding: 8px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #1e1e1e;
+      color: white;
+    }
+    button:hover {
+      background: #ff4757;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ff4757;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; padding: 20px;">
-  <h2>Significant Figures Counter</h2>
-  <p>Enter a number:</p>
-  
-  <input id="numberInput" type="text" placeholder="e.g., 0.0045200" style="padding:5px;"/>
-  <button onclick="countSigFigs()" style="padding:5px 10px;">Count</button>
-  
-  <p id="result" style="font-weight: bold; margin-top: 15px;"></p>
+<body>
+  <div class="sidebar">
+    <h2>Phantom Math</h2>
+    <input type="text" placeholder="Search..." />
+    <a href="index.html">🏠 Home</a>
+    <a href="linear.html">Linear Equations</a>
+    <a href="quadratic.html">Quadratic Equations</a>
+    <a href="simplify.html">Expression Simplifier</a>
+    <a href="system.html">System of Equations</a>
+    <a href="sigfig.html">Significant Figures</a>
+  </div>
+
+  <div class="content">
+    <h1>Significant Figures Counter</h1>
+    <p>Enter a number below to count its significant figures:</p>
+
+    <input id="numberInput" type="text" placeholder="e.g., 0.0045200" />
+    <button onclick="countSigFigs()">Count</button>
+
+    <p id="result"></p>
+  </div>
 
   <script>
     function countSigFigs() {
@@ -19,42 +98,41 @@
       let result = document.getElementById("result");
 
       if (numStr === "" || isNaN(numStr)) {
-        result.textContent = "Please enter a valid number.";
+        result.textContent = "⚠️ Please enter a valid number.";
         return;
       }
 
-      // Handle scientific notation (like 4.52e3)
+      // Handle scientific notation
       if (numStr.toLowerCase().includes("e")) {
         let num = Number(numStr);
-        numStr = num.toString(); // expand to normal number string
+        numStr = num.toString();
       }
 
       // Remove negative sign
       numStr = numStr.replace("-", "");
 
-      // If decimal exists, keep it for rules
       let hasDecimal = numStr.includes(".");
       let digits = numStr;
 
-      // Remove leading zeros (before the first nonzero digit)
+      // Remove leading zeros
       digits = digits.replace(/^0+/, "");
 
-      // If decimal exists, remove leading zeros after decimal but before first nonzero
+      // Remove leading zeros after decimal but before first nonzero
       if (digits.startsWith(".")) {
         digits = digits.replace(/^\.0+/, ".");
       }
 
-      // Remove decimal point for counting
+      // Remove decimal point
       let clean = digits.replace(".", "");
 
-      // If no decimal, trailing zeros are not significant
+      // If no decimal, remove trailing zeros
       if (!hasDecimal) {
         clean = clean.replace(/0+$/, "");
       }
 
       let sigFigs = clean.length;
 
-      result.textContent = "Significant Figures: " + sigFigs;
+      result.textContent = "✅ Significant Figures: " + sigFigs;
     }
   </script>
 </body>
