@@ -1,138 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
   <title>Significant Figures Counter</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: white;
-      display: flex;
-    }
-    .sidebar {
-      width: 220px;
-      background: #1e1e1e;
-      padding: 20px;
-      height: 100vh;
-      border-right: 2px solid #ff4757;
-    }
-    .sidebar h2 {
-      color: #ff4757;
-      margin-bottom: 20px;
-    }
-    .sidebar input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ff4757;
-      background: #121212;
-      color: white;
-    }
-    .sidebar a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      margin: 10px 0;
-      padding: 8px;
-      border-radius: 5px;
-      transition: 0.3s;
-    }
-    .sidebar a:hover {
-      background: #ff4757;
-    }
-    .content {
-      flex: 1;
-      padding: 40px;
-      text-align: center;
-    }
-    h1 {
-      color: #ff4757;
-    }
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
     input, button {
-      padding: 8px;
       margin: 10px;
+      padding: 10px;
       border-radius: 5px;
       border: 1px solid #ff4757;
       background: #1e1e1e;
       color: white;
     }
-    button:hover {
-      background: #ff4757;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #ff4757;
-    }
+    button { cursor: pointer; }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>Phantom Math</h2>
-    <input type="text" placeholder="Search..." />
-    <a href="index.html">🏠 Home</a>
-    <a href="linear.html">Linear Equations</a>
-    <a href="quadratic.html">Quadratic Equations</a>
-    <a href="simplify.html">Expression Simplifier</a>
-    <a href="system.html">System of Equations</a>
-    <a href="sigfig.html">Significant Figures</a>
-  </div>
-
-  <div class="content">
-    <h1>Significant Figures Counter</h1>
-    <p>Enter a number below to count its significant figures:</p>
-
-    <input id="numberInput" type="text" placeholder="e.g., 0.0045200" />
-    <button onclick="countSigFigs()">Count</button>
-
-    <p id="result"></p>
-  </div>
+  <h1>Significant Figures Counter</h1>
+  <p>Enter a number to count its significant figures:</p>
+  <input id="numberInput" placeholder="e.g. 0.004560" />
+  <button onclick="countSigFigs()">Count</button>
+  <div id="result" class="result"></div>
 
   <script>
     function countSigFigs() {
       let numStr = document.getElementById("numberInput").value.trim();
-      let result = document.getElementById("result");
 
-      if (numStr === "" || isNaN(numStr)) {
-        result.textContent = "⚠️ Please enter a valid number.";
+      // Handle scientific notation (e.g., 1.23e4)
+      if (/e/i.test(numStr)) {
+        let [coeff, exp] = numStr.toLowerCase().split("e");
+        numStr = coeff;
+      }
+
+      // Remove leading/trailing spaces & decimal formatting
+      if (numStr.includes(".")) {
+        // Decimal number → all digits after first nonzero are significant
+        numStr = numStr.replace(/^0+/, ""); 
+        numStr = numStr.replace(/^\./, "0.");
+      } else {
+        // Integer → strip leading zeros only
+        numStr = numStr.replace(/^0+/, "");
+      }
+
+      // Count significant figures properly
+      let match = numStr.match(/[1-9](?:\d*\.?\d*|\d*\.?\d*)/);
+      if (!match) {
+        document.getElementById("result").innerHTML = "Please enter a valid number.";
         return;
       }
 
-      // Handle scientific notation
-      if (numStr.toLowerCase().includes("e")) {
-        let num = Number(numStr);
-        numStr = num.toString();
-      }
-
-      // Remove negative sign
-      numStr = numStr.replace("-", "");
-
-      let hasDecimal = numStr.includes(".");
-      let digits = numStr;
-
-      // Remove leading zeros
-      digits = digits.replace(/^0+/, "");
-
-      // Remove leading zeros after decimal but before first nonzero
-      if (digits.startsWith(".")) {
-        digits = digits.replace(/^\.0+/, ".");
-      }
-
-      // Remove decimal point
-      let clean = digits.replace(".", "");
-
-      // If no decimal, remove trailing zeros
-      if (!hasDecimal) {
-        clean = clean.replace(/0+$/, "");
-      }
-
+      let clean = numStr.replace(/^0+|\.|e.*$/gi, ""); // remove leading zeros, decimals, exponent
       let sigFigs = clean.length;
 
-      result.textContent = "✅ Significant Figures: " + sigFigs;
+      document.getElementById("result").innerHTML = "Significant Figures: " + sigFigs;
     }
   </script>
 </body>
