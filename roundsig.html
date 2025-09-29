@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Round to Significant Figures</title>
+  <style>
+    body { background: #121212; color: white; font-family: Arial; text-align: center; padding: 20px; }
+    h1 { color: #ff4757; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ff4757;
+      background: #1e1e1e;
+      color: white;
+    }
+    button:hover { background: #ff4757; }
+    .result { margin-top: 20px; border: 1px solid #ff4757; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Round to Significant Figures</h1>
+  <p>Enter a number and how many significant figures to round to</p>
+  <input id="num" placeholder="12345.678" />
+  <input id="figs" type="number" min="1" placeholder="3" />
+  <button onclick="roundToSigFigs()">Round</button>
+  <div id="result" class="result"></div>
+
+  <script>
+    function roundToSigFigs() {
+      let num = parseFloat(document.getElementById("num").value);
+      let figs = parseInt(document.getElementById("figs").value);
+
+      if (isNaN(num) || isNaN(figs) || figs <= 0) {
+        document.getElementById("result").innerHTML = "Please enter a valid number and sig figs.";
+        return;
+      }
+
+      let rounded = Number(num.toPrecision(figs));
+      document.getElementById("result").innerHTML = num + " rounded to " + figs + " sig figs = " + rounded;
+    }
+  </script>
+
+  <p><a href="index.html" style="color:#ff4757">⬅ Back to Home</a></p>
+</body>
+</html>
